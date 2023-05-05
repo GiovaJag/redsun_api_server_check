@@ -43,16 +43,17 @@ def getapiredsun():
 
 def send_to_telegram():
     stringtext = getapiredsun()
-    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + monitor_chatID + '&parse_mode=Markdown&text=' + stringtext
-    response = requests.get(send_text) #TRACKING MAPS
+    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + monitor_chatID + '&parse_mode=Markdown&text=' + stringtext    
     if alert_me_1 in stringtext:
         alert_request = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_alert_chatID + '&parse_mode=Markdown&text=' + 'MITM!!!!!!'
         requests.get(alert_request)
     if alert_me_2 in stringtext:
-        alert_request2 = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_alert_chatID + '&parse_mode=Markdown&text=' + 'feed and seed'
+        alert_request2 = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_alert_chatID + '&parse_mode=Markdown&text=' + 'feed and seed' #the last string is the text sent for notification
         requests.get(alert_request2)
-    
-    return response.json()   
+        
+    #MONITORING MAPS
+    #response = requests.get(send_text) #TRACKING MAPS
+    #return response.json()   
 
 def checktime():
     timecurrent = datetime.datetime.now()
@@ -73,7 +74,7 @@ def checktime():
 send_to_telegram()
 
 
-
+#the number indicates how often you execute the function in seconds, don't go under 60 seconds plz
 schedule.every(120).seconds.do(send_to_telegram)
 while True:
     schedule.run_pending()
