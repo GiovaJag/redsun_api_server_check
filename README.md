@@ -1,5 +1,8 @@
 # REDSUN MAP NOTIFICATION SCRIPT
+# ATTENTION
+ - you have 100 requests per hour to api
 
+# INFO
 this script can send you the current and next maps using a Telegram bot
 useful for getting notified if a specific gamemode/map appears
 
