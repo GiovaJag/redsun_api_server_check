@@ -11,9 +11,9 @@ bot_alert_chatID = ''  # telegram chat id used for notification
 alert_me_1 = 'Mann in the Machine' #word to get notified
 alert_me_2 = 'ESS SEE PEE' #word n.2
 
-url = 'https://redsun.tf/api/servers/?format=json'
-     
 
+url = 'https://redsun.tf/api/servers/?format=json'     
+prev_stringtext = ""
 def getapiredsun():
     response = requests.get(url, headers=head)
     if response.ok:
@@ -42,18 +42,25 @@ def getapiredsun():
        print(response.content)
 
 def send_to_telegram():
+    global prev_stringtext
     stringtext = getapiredsun()
-    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + monitor_chatID + '&parse_mode=Markdown&text=' + stringtext    
-    if alert_me_1 in stringtext:
-        alert_request = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_alert_chatID + '&parse_mode=Markdown&text=' + 'MITM!!!!!!'
-        requests.get(alert_request)
-    if alert_me_2 in stringtext:
-        alert_request2 = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_alert_chatID + '&parse_mode=Markdown&text=' + 'feed and seed' #the last string is the text sent for notification
-        requests.get(alert_request2)
-        
-    #MONITORING MAPS
-    #response = requests.get(send_text) #TRACKING MAPS
-    #return response.json()   
+    if stringtext != prev_stringtext:
+        send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + monitor_chatID + '&parse_mode=Markdown&text=' + stringtext
+        #MONITORING MAPS
+        #response = requests.get(send_text) #TRACKING MAPS
+        #return response.json()
+        prev_stringtext = stringtext
+        if alert_me_1 in stringtext:
+            alert_request = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_alert_chatID + '&parse_mode=Markdown&text=' + 'MITM!!!!!!'
+            requests.get(alert_request)
+        if alert_me_2 in stringtext:
+            alert_request2 = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_alert_chatID + '&parse_mode=Markdown&text=' + 'feed and seed' #the last string is the text sent for notification
+            requests.get(alert_request2)
+        #if alert_me_2 in stringtext:
+            #alert_request3 = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_alert_chatID + '&parse_mode=Markdown&text=' + 'feed and seed' #the last string is the text sent for notification
+            #requests.get(alert_request3)
+    else:
+        response = None
 
 def checktime():
     timecurrent = datetime.datetime.now()
@@ -75,7 +82,7 @@ send_to_telegram()
 
 
 #the number indicates how often you execute the function in seconds, don't go under 60 seconds plz
-schedule.every(120).seconds.do(send_to_telegram)
+schedule.every(100).seconds.do(send_to_telegram)
 while True:
     schedule.run_pending()
     time.sleep(1)
