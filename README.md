@@ -37,8 +37,3 @@ Run the script inside a console typing: python3 apired_1.py
 
 use CTRL+C to stop it
 
-
-
-# Contact
-
-Giova#3928 on discor
