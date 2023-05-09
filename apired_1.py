@@ -44,6 +44,8 @@ def getapiredsun():
 def send_to_telegram():
     global prev_stringtext
     stringtext = getapiredsun()
+    if stringtext is None:
+        stringtext = ""
     if stringtext != prev_stringtext:
         send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + monitor_chatID + '&parse_mode=Markdown&text=' + stringtext
         #MONITORING MAPS
